@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
+using StoreApi.Security;
 
 namespace StoreApi
 {
@@ -24,6 +27,39 @@ namespace StoreApi
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      // Get JWT Token Settings from JwtSettings.json file
+      JwtSettings settings;
+      settings = GetJwtSettings();
+
+      // create Singlton of JwtSettings
+      services.AddSingleton<JwtSettings>(settings);
+
+
+      // Register Jwt as the Authentication service
+      services.AddAuthentication(options =>
+      {
+        options.DefaultAuthenticateScheme = "JwtBearer";
+        options.DefaultChallengeScheme = "JwtBearer";
+      })
+      .AddJwtBearer("JwtBearer", jwtBearerOptions =>
+      {
+        jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters()
+        {
+          ValidateIssuerSigningKey = true,
+          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.Key)),
+          ValidateIssuer = true,
+          ValidIssuer = settings.Issuer,
+
+          ValidateAudience = true,
+          ValidAudience = settings.Audience,
+
+          ValidateLifetime = true,
+          ClockSkew = TimeSpan.FromMinutes(settings.MinutesToExpiration)
+        };
+      });
+
+
+
       services.AddCors();
 
       services.AddMvc()
@@ -45,7 +81,21 @@ namespace StoreApi
           "http://localhost:4200").AllowAnyMethod().AllowAnyHeader()
       );
 
+      // Tell Web API project to use the authentication
+      app.UseAuthentication();
+
       app.UseMvc();
+    }
+
+    public JwtSettings GetJwtSettings()
+    {
+      JwtSettings settings = new JwtSettings();
+      settings.Key = Configuration["JwtSettings:key"];
+      settings.Issuer = Configuration["JwtSettings:issuer"];
+      settings.Audience = Configuration["JwtSettings:audience"];
+      settings.MinutesToExpiration = Convert.ToInt32(Configuration["JwtSettings:minutesToExpiration"]);
+
+      return settings;
     }
   }
 }
