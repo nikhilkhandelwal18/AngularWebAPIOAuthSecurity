@@ -22,4 +22,3 @@ export const LOGIN_MOCKS: AppUserAuth[] = [
       canAddCategory: true
     }
   ];
-  

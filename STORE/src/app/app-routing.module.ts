@@ -1,5 +1,6 @@
+import { AuthGuard } from './security/auth.guard';
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, CanActivate } from '@angular/router';
 
 import { ProductListComponent } from './product/product-list.component';
 import { CategoryListComponent } from './category/category-list.component';
@@ -18,15 +19,21 @@ const routes: Routes = [
   },
   {
     path: 'products',
-    component: ProductListComponent
+    component: ProductListComponent,
+    canActivate: [AuthGuard],
+    data: {claimType: 'canAccessProducts'}
   },
   {
     path: 'productDetail/:id',
-    component: ProductDetailComponent
+    component: ProductDetailComponent,
+    canActivate: [AuthGuard],
+    data: {claimType: 'canAccessProducts'}
   },
   {
     path: 'categories',
-    component: CategoryListComponent
+    component: CategoryListComponent,
+    canActivate: [AuthGuard],
+    data: {claimType: 'canAccessCategories'}
   },
   {
     path: '', redirectTo: 'dashboard', pathMatch: 'full'
