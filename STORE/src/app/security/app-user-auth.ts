@@ -1,10 +1,10 @@
 export class AppUserAuth {
-    userName = '';
-    bearerToken = '';
-    isAuthenticated = false;
-    canAccessProducts = false;
-    canAddProduct = false;
-    canSaveProduct = false;
-    canAccessCategories = false;
-    canAddCategory = false;
+    userName: string = '';
+    bearerToken: string = '';
+    isAuthenticated: boolean = false;
+    canAccessProducts: boolean = false;
+    canAddProduct: boolean = false;
+    canSaveProduct: boolean = false;
+    canAccessCategories: boolean = false;
+    canAddCategory: boolean = false;
   }
