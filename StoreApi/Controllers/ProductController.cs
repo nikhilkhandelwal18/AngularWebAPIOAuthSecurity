@@ -10,10 +10,11 @@ using Microsoft.AspNetCore.Authorization;
 namespace StoreApi.Controllers
 {
   [Route("api/[controller]")]
+  [Authorize]
   public class ProductController : BaseApiController
   {
     [HttpGet]
-    [Authorize]
+    [Authorize(Policy = "CanAccessProducts")]
     public IActionResult Get()
     {
       IActionResult ret = null;

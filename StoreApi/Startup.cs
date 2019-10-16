@@ -59,6 +59,11 @@ namespace StoreApi
       });
 
 
+      services.AddAuthorization(cfg =>
+      {
+        // NOTE: The claim type and value are case-sensitive
+        cfg.AddPolicy("CanAccessProducts", p => p.RequireClaim("CanAccessProducts", "true"));
+      });
 
       services.AddCors();
 

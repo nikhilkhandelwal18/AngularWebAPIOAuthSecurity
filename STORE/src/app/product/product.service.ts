@@ -1,3 +1,4 @@
+//import { SecurityService } from './../security/security.service';
 import { Injectable } from '@angular/core';
 // import { Observable } from 'rxjs/Observable';
 // import { of } from 'rxjs/observable/of';
@@ -18,9 +19,16 @@ const httpOptions = {
 @Injectable()
 export class ProductService {
 
+  /* remove securityService form ctor, now handle by HttpInterceptor */
   constructor(private http: HttpClient) { }
 
   getProducts(): Observable<Product[]> {
+    /* remove securityService form ctor, now handle by HttpInterceptor */
+    // let httpOptions = new HttpHeaders()
+    // .set('Authorization', 'Bearer ' + this.securityService.securityObject.bearerToken);
+
+    //return this.http.get<Product[]>(API_URL, {headers: httpOptions});
+
     return this.http.get<Product[]>(API_URL);
   }
 

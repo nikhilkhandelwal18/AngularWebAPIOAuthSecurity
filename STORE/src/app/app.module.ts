@@ -1,7 +1,8 @@
+import { HttpInterceptorModule } from './security/http-interceptor';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpInterceptor } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { ProductListComponent } from './product/product-list.component';
@@ -28,7 +29,8 @@ import { AuthGuard } from './security/auth.guard';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpInterceptorModule
   ],
   providers: [ProductService, CategoryService, SecurityService, AuthGuard],
   bootstrap: [AppComponent]
